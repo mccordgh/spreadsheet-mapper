@@ -1,0 +1,16 @@
+.mappings-list {
+    padding-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+
+.mappings-list--items {
+    width: 100%;
+}
+
+.mappings-list--title {
+    font-size: 1.6rem;
+    font-weight: bold;
+    padding-bottom: 1rem;
+}

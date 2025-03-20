@@ -1,0 +1,27 @@
+.mapping-item-wrapper {
+    display: grid;
+    grid-template-rows: repeat(auto-fill, 3rem);
+    grid-template-columns: 1fr 4rem 1fr 4rem;
+}
+
+.mapping-item-from {
+    grid-column: 1;
+    display: flex;
+    justify-content: end;
+}
+
+.mapping-item-arrow {
+    grid-column: 2;
+    display: flex;
+    justify-content: center;;
+}
+
+.mapping-item-to {
+    grid-column: 3;
+    display: flex;
+    justify-content: start;
+}
+
+.mapping-item--button {
+    grid-column: 4;
+}
