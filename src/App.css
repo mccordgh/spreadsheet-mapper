@@ -28,8 +28,35 @@ html, body, #root, .App {
 }
 
 .App-body {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  min-width: 800px;
+}
+
+.App-body-left {
+  padding: 1rem;
+  border: 1px solid black;
+  min-width: 33.3%;
+  /* display: flex;
   flex-direction: column;
+  align-items: start; */
+  /* justify-content: center; */
+}
+
+.App-body-center {
+  border: 1px solid grey;
+  min-width: 33.3%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.App-body-right {
+  border: 1px solid black;
+  min-width: 33.3%;
+  display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
 }
