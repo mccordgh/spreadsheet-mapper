@@ -15,11 +15,11 @@ const Button = (props: ButtonProps) => {
     let children: React.JSX.Element | null = null;
 
     if (icon) {
-        children = <button onClick={onClick}>{icon === "checkmark" ? checkMark : xMark}</button>;
+        children = <button className='mapping-item--button' onClick={onClick}>{icon === "checkmark" ? checkMark : xMark}</button>;
     }
     
     if (text) {
-        children = <button onClick={onClick}>{text}</button>;
+        children = <button className='mapping-item--button' onClick={onClick}>{text}</button>;
     }
     
     if (children === null) {

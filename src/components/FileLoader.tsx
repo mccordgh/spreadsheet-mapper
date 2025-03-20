@@ -2,11 +2,9 @@ import React, { ChangeEvent } from 'react';
 
 import "../styles/FileLoader.css";
 
-import { SpreadSheetData } from '../models/SpreadSheetData';
-
 type FileLoaderProps = {
     title: string;
-    onFileLoad: (event: ChangeEvent<HTMLInputElement>) => SpreadSheetData;
+    onFileLoad: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const FileLoader = (props: FileLoaderProps) => {

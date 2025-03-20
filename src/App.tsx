@@ -1,6 +1,8 @@
 import React, { ChangeEvent } from 'react';
 import { FileLoader } from './components/FileLoader';
+import { FileSaver } from './components/FileSaver';
 import { HeaderList } from './components/HeaderList';
+import { MappingsList } from './components/MappingsList';
 
 import { parse, ParseResult, LocalFile } from 'papaparse';
 
@@ -51,7 +53,9 @@ function App() {
         </div>
         
         <div className="App-body-center">
-          {/* <FileSaver title="Save New File"/> */}
+          <FileSaver title="New File To Save"/>
+          <hr />
+          <MappingsList title="Mappings:" />
         </div>
 
         <div className="App-body-right">
