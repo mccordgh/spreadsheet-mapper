@@ -1,14 +1,17 @@
 import React from 'react';
 
+import '../styles/ListItem.css';
+
 type ListItemProps = {
   text?: string;
   onClick?: () => void;
 }
 
 const ListItem = (props: ListItemProps) => {
-  return <div className='list-item' onClick={props.onClick}>
+  const { onClick, text } = props;
+  return <div className='list-item' onClick={onClick}>
     <span>
-      {props.text}
+      {text}
     </span>
   </div>;
 }
