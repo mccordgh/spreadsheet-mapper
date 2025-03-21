@@ -14,15 +14,15 @@ const MappingItem = (props: MappingItemProps) => {
     
     return (
         <div className='mapping-item-wrapper'>
-            <div className='mapping-item-from'>
+            <div className='mapping-item mapping-item-from'>
                 {mapFromColumn}
             </div>
             
-            <div className='mapping-item-arrow'>
+            <div className='mapping-item mapping-item-arrow'>
                 &rarr;
             </div>
             
-            <div className='mapping-item-to'>
+            <div className='mapping-item mapping-item-to'>
                 {mapToColumn}
             </div>
 

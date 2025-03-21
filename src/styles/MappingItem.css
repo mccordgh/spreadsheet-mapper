@@ -2,6 +2,16 @@
     display: grid;
     grid-template-rows: repeat(auto-fill, 3rem);
     grid-template-columns: 1fr 4rem 1fr 4rem;
+    margin: 1rem 0;
+}
+
+.mapping-item {
+    display: flex;
+    align-items: center;
+    border: 1px solid black;
+    padding: 1rem;
+    margin: 0 1rem;
+    display: flex;
 }
 
 .mapping-item-from {
@@ -11,6 +21,11 @@
 }
 
 .mapping-item-arrow {
+    padding: 0 0 0.4rem 0;
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0;
+    border: none;
     grid-column: 2;
     display: flex;
     justify-content: center;;
@@ -23,5 +38,6 @@
 }
 
 .mapping-item--button {
+    margin: rem;
     grid-column: 4;
 }
