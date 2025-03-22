@@ -3,29 +3,33 @@ import React from 'react';
 import '../styles/HeaderList.css';
 
 import { ListItem } from './ListItem';
+import { HeaderItem } from '../models/HeaderItem';
 
 type HeaderListProps = {
-  headers: string[];
+  headers: HeaderItem[];
   title: string;
-  onClick: () => void;
+  type: 'from' | 'to';
+//   onClick: (id: number, type: 'from' | 'to') => void;
 }
 
 const HeaderList = (props: HeaderListProps) => {
+    const { headers, title, type } = props;
+
     const getListContainer = () => {
-        if (!props?.headers || props?.headers?.length === 0) {
+        if (!headers || headers?.length === 0) {
             return <></>;
         }
 
         return (
             <div className='header-list--container'>
-                {props?.headers?.map((header, index) => <ListItem key={index} text={header} />)}
+                {headers?.map((header, index) => <ListItem key={index} type={type} header={header} />)}
             </div>
         )
     }
 
     return (
-        <div className='header-list' onClick={props.onClick}>
-            <span className='header-list--title'>{props.title}</span>
+        <div className='header-list'>
+            <span className='header-list--title'>{title}</span>
             {getListContainer()}
         </div>
     );

@@ -1,44 +1,35 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import '../styles/MappingsList.css';
 
 import { MappingItem } from './MappingItem';
+import { MappingsContext, MappingsContextType } from '../context/MappingsContext';
+import { HeaderMapping } from '../models/HeaderMapping';
 
-type MappingsListProps = {
-  title: string;
-}
+// const dummyMapping: HeaderMapping[] = [
+//     { mapFromColumn: 'Item', mapToColumn: 'Product' },
+//     { mapFromColumn: 'Date', mapToColumn: 'Time' },
+//     { mapFromColumn: 'One Thing', mapToColumn: 'Another' },
+// ];
 
-export type HeaderMapping = {
-    mapFromColumn: string;
-    mapToColumn: string;
-}
-
-const dummyMapping: HeaderMapping[] = [
-    { mapFromColumn: 'Item', mapToColumn: 'Product' },
-    { mapFromColumn: 'Date', mapToColumn: 'Time' },
-    { mapFromColumn: 'One Thing', mapToColumn: 'Another' },
-];
-
-const MappingsList = (props: MappingsListProps) => {
-    // Always want to have one blank or "new" mapping ready to go
-    // TODO: Remove dummy data when done styling and testing
-    const [mappings, setMappings] = React.useState<HeaderMapping[]>(dummyMapping);
+const MappingsList = () => {
+    const { mappings } = useContext<MappingsContextType>(MappingsContext);
 
     const getListContainer = () => {
-        if (mappings?.length === 0) {
-            return <></>;
-        }
-
         return (
             <div className='mappings-list--items'>
-                {mappings.map((mapping: HeaderMapping, index) => <MappingItem key={index} headerMapping={mapping} />)}
+                {
+                    mappings?.map((mapping: HeaderMapping, index) => 
+                        <MappingItem key={index} headerMapping={mapping} />)
+                }
+                <MappingItem headerMapping={{id: -1, mapFromColumn: '', mapToColumn: '', confirmed: false}} />
             </div>
         )
     }
 
     return (
         <div className='mappings-list'>
-            <span className='mappings-list--title'>{props.title}</span>
+            <span className='mappings-list--title'>Mappings:</span>
             {getListContainer()}
         </div>
     );

@@ -1,17 +1,29 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import '../styles/MappingItem.css';
 
 import { Button } from './Button';
-import { HeaderMapping } from './MappingsList';
+import { MappingsContext, MappingsContextType } from '../context/MappingsContext';
+import { HeaderMapping } from '../models/HeaderMapping';
 
 type MappingItemProps = {
-    headerMapping: HeaderMapping
+    headerMapping: HeaderMapping;
 }
 
 const MappingItem = (props: MappingItemProps) => {
-    const { mapFromColumn, mapToColumn } = props.headerMapping;
+    const { confirmMapping, deleteMapping } = useContext<MappingsContextType>(MappingsContext);
+    const { mapFromColumn, mapToColumn, confirmed, id } = props?.headerMapping;
+
+    const iconName = confirmed ? 'x' : 'checkmark';
     
+    const onClickCallback = () => {
+        if (confirmed) {
+            deleteMapping(id);
+        } else {
+            confirmMapping(id);
+        }
+    }
+
     return (
         <div className='mapping-item-wrapper'>
             <div className='mapping-item mapping-item-from'>
@@ -26,7 +38,7 @@ const MappingItem = (props: MappingItemProps) => {
                 {mapToColumn}
             </div>
 
-            <Button icon='checkmark' onClick={() => console.log('checkmark')} />
+            <Button icon={iconName} onClick={onClickCallback} />
         </div>
     );
 }
