@@ -38,6 +38,11 @@
 }
 
 .mapping-item--button {
-    margin: rem;
+    padding-bottom: 0.3rem;
+    margin: 0.2rem 0.4rem;
+    font-size: 1.6rem;
     grid-column: 4;
+    justify-content: center;
+    align-items: center;
+    display: flex;
 }
