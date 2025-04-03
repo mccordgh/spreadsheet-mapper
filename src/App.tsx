@@ -22,7 +22,7 @@ function App() {
     const [headersTo, setHeadersTo] = useState<HeaderItem[]>(dummyHeaderListTo);
     
     // Always want to have one blank or "new" mapping ready to go
-    const [mappings, setMappings] = useState<HeaderMapping[]>([]);
+    const [mappings, setMappings] = useState<HeaderMapping[]>([{id: 0, mapFromColumn: '', mapToColumn: '', confirmed: false}]);
 
     const prepareHeaderItems = (fields: string[]): HeaderItem[] => {
         return fields.map((field, index) => ({ id: index, text: field }));
