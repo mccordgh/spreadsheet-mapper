@@ -1,6 +1,8 @@
+import { HeaderItem } from "./HeaderItem";
+
 export type HeaderMapping = {
   id: number;
-  mapFromColumn: string;
-  mapToColumn: string;
+  mapFromColumn: HeaderItem;
+  mapToColumn: HeaderItem;
   confirmed: boolean;
 };

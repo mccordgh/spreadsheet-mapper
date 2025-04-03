@@ -31,15 +31,16 @@ const MappingItem = (props: MappingItemProps) => {
 
   const shouldHideButton =
     !confirmed &&
-    (StringHelper.isEmpty(mapFromColumn) || StringHelper.isEmpty(mapToColumn));
+    (StringHelper.isEmpty(mapFromColumn.text) ||
+      StringHelper.isEmpty(mapToColumn.text));
 
   return (
     <div className="mapping-item-wrapper">
-      <div className="mapping-item mapping-item-from">{mapFromColumn}</div>
+      <div className="mapping-item mapping-item-from">{mapFromColumn.text}</div>
 
       <div className="mapping-item mapping-item-arrow">&rarr;</div>
 
-      <div className="mapping-item mapping-item-to">{mapToColumn}</div>
+      <div className="mapping-item mapping-item-to">{mapToColumn.text}</div>
 
       {!shouldHideButton && (
         <Button isDisabled={false} icon={iconName} onClick={onClickCallback} />

@@ -11,33 +11,33 @@ import { MappingsContext } from "./context/MappingsContext";
 import { HeadersContext } from "./context/HeadersContext";
 import { HeaderItem } from "./models/HeaderItem";
 import { HeaderMapping } from "./models/HeaderMapping";
-// import { CsvHelper } from "./helpers/CsvHelper";
+import { CsvHelper } from "./helpers/CsvHelper";
+import { LocalFile, ParseResult } from "papaparse";
 
 // TODO: Remove when done testing
-const dummyHeaderListFrom: HeaderItem[] = [
-  { id: 0, text: "Item Name" },
-  { id: 1, text: "Token" },
-  { id: 2, text: "Unit and Precision" },
-  { id: 3, text: "Variation Name" },
-];
-const dummyHeaderListTo: HeaderItem[] = [
-  { id: 0, text: "Description" },
-  { id: 1, text: "Product category" },
-  { id: 2, text: "Title" },
-  { id: 3, text: "URL handle" },
-  { id: 4, text: "Vendor" },
-];
+// const dummyHeaderListFrom: HeaderItem[] = [
+//   { id: 0, text: "Item Name" },
+//   { id: 1, text: "Token" },
+//   { id: 2, text: "Unit and Precision" },
+//   { id: 3, text: "Variation Name" },
+// ];
+// const dummyHeaderListTo: HeaderItem[] = [
+//   { id: 0, text: "Description" },
+//   { id: 1, text: "Product category" },
+//   { id: 2, text: "Title" },
+//   { id: 3, text: "URL handle" },
+//   { id: 4, text: "Vendor" },
+// ];
 
 function App() {
   // TODO: Reset initial value to '[]' when done testing
-  const [headersFrom, setHeadersFrom] =
-    useState<HeaderItem[]>(dummyHeaderListFrom);
-  const [headersTo, setHeadersTo] = useState<HeaderItem[]>(dummyHeaderListTo);
+  const [headersFrom, setHeadersFrom] = useState<HeaderItem[]>([]);
+  const [headersTo, setHeadersTo] = useState<HeaderItem[]>([]);
 
   const createEmptyMapping = (id: number): HeaderMapping => ({
     id,
-    mapFromColumn: "",
-    mapToColumn: "",
+    mapFromColumn: { id: -1, text: "" },
+    mapToColumn: { id: -1, text: "" },
     confirmed: false,
   });
 
@@ -93,8 +93,8 @@ function App() {
       let newHeadersFrom = Array.from(headersFrom);
       let newHeadersTo = Array.from(headersTo);
 
-      newHeadersFrom.push(createHeader(0, foundMapping.mapFromColumn));
-      newHeadersTo.push(createHeader(0, foundMapping.mapToColumn));
+      newHeadersFrom.push(createHeader(0, foundMapping?.mapFromColumn?.text));
+      newHeadersTo.push(createHeader(0, foundMapping?.mapToColumn?.text));
 
       newHeadersFrom = sortHeaders(newHeadersFrom);
       newHeadersTo = sortHeaders(newHeadersTo);
@@ -111,7 +111,9 @@ function App() {
       type === "from" ? newMapping?.mapFromColumn : newMapping?.mapToColumn;
 
     return (
-      headerField === undefined || headerField === null || headerField === ""
+      headerField === undefined ||
+      headerField === null ||
+      headerField.text === ""
     );
   };
 
@@ -127,11 +129,13 @@ function App() {
     const headerToAdd = headerFields.find((field) => field.id === id);
 
     if (type === "from") {
-      newMapping.mapFromColumn = headerToAdd?.text ?? "";
+      newMapping.mapFromColumn.id = id;
+      newMapping.mapFromColumn.text = headerToAdd?.text ?? "";
       const headers = headersFrom.filter((header) => header.id !== id);
       setHeadersFrom(headers);
     } else if (type === "to") {
-      newMapping.mapToColumn = headerToAdd?.text ?? "";
+      newMapping.mapToColumn.id = id;
+      newMapping.mapToColumn.text = headerToAdd?.text ?? "";
       const headers = headersTo.filter((header) => header.id !== id);
       setHeadersTo(headers);
     } else {
@@ -146,7 +150,28 @@ function App() {
     event: ChangeEvent<HTMLInputElement>,
     type: "from" | "to"
   ) => {
-    // const parsed = CsvHelper.parseFile(event, type);
+    const completionCallback = (
+      results: ParseResult<File>,
+      file: LocalFile
+    ): void => {
+      if (results?.meta?.fields) {
+        let preparedFields: HeaderItem[] = CsvHelper.prepareHeaderItems(
+          results.meta.fields
+        );
+
+        preparedFields = sortHeaders(preparedFields);
+
+        if (type === "from") {
+          setHeadersFrom(preparedFields);
+        } else if (type === "to") {
+          setHeadersTo(preparedFields);
+        } else {
+          throw new Error(`unknown header type: ${type}`);
+        }
+      }
+    };
+
+    CsvHelper.parseFile(event, type, completionCallback);
   };
 
   return (
