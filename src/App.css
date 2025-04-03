@@ -1,11 +1,14 @@
 * {
   font-size: 10px;
-  color: #111D13;
+  color: #111d13;
   box-sizing: border-box;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
-html, body, #root, .App {
+html,
+body,
+#root,
+.App {
   margin: 0;
   padding: 0;
   height: 100%;

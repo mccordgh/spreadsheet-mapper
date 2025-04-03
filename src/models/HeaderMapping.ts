@@ -1,6 +1,6 @@
 export type HeaderMapping = {
-    id: number;
-    mapFromColumn: string;
-    mapToColumn: string;
-    confirmed: boolean;
-}
+  id: number;
+  mapFromColumn: string;
+  mapToColumn: string;
+  confirmed: boolean;
+};
