@@ -15,17 +15,17 @@ import { HeaderMapping } from "./models/HeaderMapping";
 
 // TODO: Remove when done testing
 const dummyHeaderListFrom: HeaderItem[] = [
-  { id: 0, text: "Token" },
-  { id: 1, text: "Item Name" },
-  { id: 2, text: "Variation Name" },
-  { id: 3, text: "Unit and Precision" },
+  { id: 0, text: "Item Name" },
+  { id: 1, text: "Token" },
+  { id: 2, text: "Unit and Precision" },
+  { id: 3, text: "Variation Name" },
 ];
 const dummyHeaderListTo: HeaderItem[] = [
-  { id: 0, text: "Title" },
-  { id: 1, text: "URL handle" },
-  { id: 2, text: "Description" },
-  { id: 3, text: "Vendor" },
-  { id: 4, text: "Product category" },
+  { id: 0, text: "Description" },
+  { id: 1, text: "Product category" },
+  { id: 2, text: "Title" },
+  { id: 3, text: "URL handle" },
+  { id: 4, text: "Vendor" },
 ];
 
 function App() {
@@ -40,6 +40,10 @@ function App() {
     mapToColumn: "",
     confirmed: false,
   });
+
+  const createHeader = (id: number, text: string): HeaderItem => {
+    return { id, text };
+  };
 
   // Always want to have one blank or "new" mapping ready to go
   const [mappings, setMappings] = useState<HeaderMapping[]>([
@@ -67,13 +71,37 @@ function App() {
     updateMappings(newMappings);
   };
 
+  const sortHeaders = (headers: HeaderItem[]): HeaderItem[] => {
+    return [...headers].sort((headerA, headerB) =>
+      headerA.text.localeCompare(headerB.text)
+    );
+  };
+
   const deleteMapping = (id: number): void => {
     let newMappings = Array.from(mappings);
+    const foundMapping = newMappings.find((mapping) => mapping.id === id);
+
+    if (!foundMapping) {
+      return;
+    }
+
     const mappingsLen = newMappings.length;
     newMappings = newMappings.filter((mapping) => mapping.id !== id);
 
+    // Check if mapping was found and deleted
     if (newMappings.length !== mappingsLen) {
+      let newHeadersFrom = Array.from(headersFrom);
+      let newHeadersTo = Array.from(headersTo);
+
+      newHeadersFrom.push(createHeader(0, foundMapping.mapFromColumn));
+      newHeadersTo.push(createHeader(0, foundMapping.mapToColumn));
+
+      newHeadersFrom = sortHeaders(newHeadersFrom);
+      newHeadersTo = sortHeaders(newHeadersTo);
+
       updateMappings(newMappings);
+      setHeadersFrom(newHeadersFrom);
+      setHeadersTo(newHeadersTo);
     }
   };
 
@@ -100,8 +128,12 @@ function App() {
 
     if (type === "from") {
       newMapping.mapFromColumn = headerToAdd?.text ?? "";
+      const headers = headersFrom.filter((header) => header.id !== id);
+      setHeadersFrom(headers);
     } else if (type === "to") {
       newMapping.mapToColumn = headerToAdd?.text ?? "";
+      const headers = headersTo.filter((header) => header.id !== id);
+      setHeadersTo(headers);
     } else {
       throw new Error(`type not recognized: ${type}`);
     }
@@ -117,7 +149,6 @@ function App() {
     // const parsed = CsvHelper.parseFile(event, type);
   };
 
-  console.log(mappings);
   return (
     <HeadersContext.Provider value={{ headersFrom, headersTo, headerClicked }}>
       <MappingsContext.Provider
