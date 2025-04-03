@@ -19,7 +19,6 @@ const MappingsList = () => {
   const { mappings } = useContext<MappingsContextType>(MappingsContext);
 
   const getListContainer = () => {
-    console.log({ mappings: mappings });
     return (
       <div className="mappings-list--items">
         {mappings?.map((mapping: HeaderMapping, index) => (

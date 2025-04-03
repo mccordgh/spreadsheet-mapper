@@ -4,13 +4,14 @@ import { FileSaver } from "./components/FileSaver";
 import { HeaderList } from "./components/HeaderList";
 import { MappingsList } from "./components/MappingsList";
 
-import { parse, ParseResult, LocalFile } from "papaparse";
+// import { parse, ParseResult, LocalFile } from "papaparse";
 
 import "./App.css";
 import { MappingsContext } from "./context/MappingsContext";
 import { HeadersContext } from "./context/HeadersContext";
 import { HeaderItem } from "./models/HeaderItem";
 import { HeaderMapping } from "./models/HeaderMapping";
+// import { CsvHelper } from "./helpers/CsvHelper";
 
 // TODO: Remove when done testing
 const dummyHeaderListFrom: HeaderItem[] = [
@@ -33,50 +34,47 @@ function App() {
     useState<HeaderItem[]>(dummyHeaderListFrom);
   const [headersTo, setHeadersTo] = useState<HeaderItem[]>(dummyHeaderListTo);
 
+  const createEmptyMapping = (id: number): HeaderMapping => ({
+    id,
+    mapFromColumn: "",
+    mapToColumn: "",
+    confirmed: false,
+  });
+
   // Always want to have one blank or "new" mapping ready to go
   const [mappings, setMappings] = useState<HeaderMapping[]>([
-    { id: 0, mapFromColumn: "", mapToColumn: "", confirmed: false },
+    createEmptyMapping(0),
   ]);
 
-  const prepareHeaderItems = (fields: string[]): HeaderItem[] => {
-    return fields.map((field, index) => ({ id: index, text: field }));
-  };
+  const updateMappings = (mappings: HeaderMapping[]): void => {
+    mappings = mappings.map((mapping, index) => {
+      mapping.id = index;
+      return mapping;
+    });
 
-  const parseFile = (
-    event: ChangeEvent<HTMLInputElement>,
-    type: "from" | "to"
-  ): void => {
-    if (event?.target?.files) {
-      const file: File = event.target.files[0] as File;
-
-      const config = {
-        header: true,
-        complete: (results: ParseResult<File>, file: LocalFile): void => {
-          if (results?.meta?.fields) {
-            console.log("Fields:", results.meta.fields);
-            if (type === "from") {
-              setHeadersFrom(prepareHeaderItems(results.meta.fields));
-            } else {
-              setHeadersTo(prepareHeaderItems(results.meta.fields));
-            }
-          }
-          // console.log('Parsing complete:', results);
-        },
-        error: (error: unknown, file: LocalFile): void => {
-          console.error("Error parsing file:", error);
-        },
-      };
-
-      parse<File>(file, config);
-    }
+    setMappings(mappings);
   };
 
   const confirmMapping = (id: number): void => {
-    console.log("Confirming mapping:", id);
+    const newMappings = Array.from(mappings);
+    const found = newMappings.find((mapping) => mapping.id === id);
+
+    if (found) {
+      found.confirmed = true;
+    }
+
+    newMappings.push(createEmptyMapping(newMappings.length));
+    updateMappings(newMappings);
   };
 
   const deleteMapping = (id: number): void => {
-    console.log("Deleting mapping:", id);
+    let newMappings = Array.from(mappings);
+    const mappingsLen = newMappings.length;
+    newMappings = newMappings.filter((mapping) => mapping.id !== id);
+
+    if (newMappings.length !== mappingsLen) {
+      updateMappings(newMappings);
+    }
   };
 
   const canAddHeaders = (type: string): boolean => {
@@ -109,10 +107,17 @@ function App() {
     }
 
     newMappings[newMappings.length - 1] = newMapping;
-
-    setMappings(newMappings);
+    updateMappings(newMappings);
   };
 
+  const onFileLoadHandler = (
+    event: ChangeEvent<HTMLInputElement>,
+    type: "from" | "to"
+  ) => {
+    // const parsed = CsvHelper.parseFile(event, type);
+  };
+
+  console.log(mappings);
   return (
     <HeadersContext.Provider value={{ headersFrom, headersTo, headerClicked }}>
       <MappingsContext.Provider
@@ -128,7 +133,7 @@ function App() {
               <FileLoader
                 title="Load Columns From File"
                 onFileLoad={(event: ChangeEvent<HTMLInputElement>) => {
-                  parseFile(event, "from");
+                  onFileLoadHandler(event, "from");
                 }}
               />
               {headersFrom && headersFrom.length && (
@@ -153,7 +158,7 @@ function App() {
               <FileLoader
                 title="Load Columns To File"
                 onFileLoad={(event: ChangeEvent<HTMLInputElement>) => {
-                  parseFile(event, "to");
+                  onFileLoadHandler(event, "to");
                 }}
               />
               {headersTo && headersTo.length && (
