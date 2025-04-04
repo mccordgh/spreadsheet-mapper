@@ -1,13 +1,16 @@
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useContext } from "react";
 
-import "../styles/FileSaver.css";
+import "../styles/components/FileSaver.css";
 import { CsvHelper } from "../helpers/CsvHelper";
+import { FileContext } from "../context/FileContext";
 
 type FileSaverProps = {
   title: string;
 };
 
 const FileSaver = (props: FileSaverProps) => {
+  const { title } = props;
+  const { onFileSave } = useContext(FileContext);
   // const data = [
   //   { name: "Alfreds Futterkiste", city: "Berlin", country: "Germany" },
   //   {
@@ -17,26 +20,27 @@ const FileSaver = (props: FileSaverProps) => {
   //   },
   //   { name: "Ernst Handel", city: "Graz", country: "Austria" },
   // ];
-  const fileName = "mapped-data";
 
-  const downloadFile = () => {
-    //   const csvData = CsvHelper.prepareCsvData(data);
-    //   const blob = new Blob([csvData], { type: "text/csv" });
-    //   const url = URL.createObjectURL(blob);
-    //   const link = document.createElement("a");
-    //   link.href = url;
-    //   link.download = `${fileName}.csv`;
-    //   document.body.appendChild(link);
-    //   link.click();
-    //   document.body.removeChild(link);
-  };
+  // const fileName = "mapped-data";
+
+  // const downloadFile = () => {
+  //   const csvData = CsvHelper.prepareCsvData(data);
+  //   const blob = new Blob([csvData], { type: "text/csv" });
+  //   const url = URL.createObjectURL(blob);
+  //   const link = document.createElement("a");
+  //   link.href = url;
+  //   link.download = `${fileName}.csv`;
+  //   document.body.appendChild(link);
+  //   link.click();
+  //   document.body.removeChild(link);
+  // };
 
   return (
     <div className="file-saver--wrapper">
       <label className="file-saver--header" htmlFor="file-saver--button">
-        {props.title}
+        {title}
       </label>
-      <button id="file-saver--button" onClick={downloadFile}>
+      <button id="file-saver--button" onClick={onFileSave}>
         Download CSV
       </button>
     </div>

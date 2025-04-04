@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 
-import "../styles/MappingItem.css";
+import "../styles/components/MappingItem.css";
 
 import { Button } from "./Button";
 import {

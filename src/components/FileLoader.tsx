@@ -1,26 +1,28 @@
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useContext } from "react";
 
-import "../styles/FileLoader.css";
+import "../styles/components/FileLoader.css";
+import { FileContext } from "../context/FileContext";
 
 type FileLoaderProps = {
   title: string;
-  onFileLoad: (event: ChangeEvent<HTMLInputElement>) => void;
+  type: "from" | "to";
 };
 
 const FileLoader = (props: FileLoaderProps) => {
+  const { onFileLoad } = useContext(FileContext);
+  const { title, type } = props;
   return (
     <div className="file-loader--wrapper">
-      <label
-        className="file-loader--header"
-        htmlFor={`file-loader-${props.title}`}
-      >
-        {props.title}
+      <label className="file-loader--header" htmlFor={`file-loader-${title}`}>
+        {title}
       </label>
       <input
         className="file-loader--button"
         type="file"
-        id={`file-loader-${props.title}`}
-        onChange={props.onFileLoad}
+        id={`file-loader-${title}`}
+        onChange={(event: ChangeEvent<HTMLInputElement>) => {
+          onFileLoad(event, type);
+        }}
       />
     </div>
   );

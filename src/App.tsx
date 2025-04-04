@@ -6,13 +6,18 @@ import { MappingsList } from "./components/MappingsList";
 
 // import { parse, ParseResult, LocalFile } from "papaparse";
 
-import "./App.css";
+import "./styles/App.css";
 import { MappingsContext } from "./context/MappingsContext";
 import { HeadersContext } from "./context/HeadersContext";
 import { HeaderItem } from "./models/HeaderItem";
 import { HeaderMapping } from "./models/HeaderMapping";
 import { CsvHelper } from "./helpers/CsvHelper";
 import { LocalFile, ParseResult } from "papaparse";
+import Footer from "./components/sections/Footer";
+import Header from "./components/sections/Header";
+import Body from "./components/sections/Body";
+import LoadingOverlay from "./components/sections/LoadingOverlay";
+import { FileContext } from "./context/FileContext";
 
 // TODO: Remove when done testing
 // const dummyHeaderListFrom: HeaderItem[] = [
@@ -30,7 +35,7 @@ import { LocalFile, ParseResult } from "papaparse";
 // ];
 
 function App() {
-  // TODO: Reset initial value to '[]' when done testing
+  const [showOverlay, setShowOverlay] = useState(false);
   const [headersFrom, setHeadersFrom] = useState<HeaderItem[]>([]);
   const [headersTo, setHeadersTo] = useState<HeaderItem[]>([]);
 
@@ -146,7 +151,7 @@ function App() {
     updateMappings(newMappings);
   };
 
-  const onFileLoadHandler = (
+  const onFileLoad = (
     event: ChangeEvent<HTMLInputElement>,
     type: "from" | "to"
   ) => {
@@ -174,71 +179,24 @@ function App() {
     CsvHelper.parseFile(event, type, completionCallback);
   };
 
+  const onFileSave = (): void => {
+    setShowOverlay(true);
+  };
+
   return (
     <HeadersContext.Provider value={{ headersFrom, headersTo, headerClicked }}>
       <MappingsContext.Provider
         value={{ mappings, confirmMapping, deleteMapping }}
       >
-        <div className="App">
-          <header className="App-header">
-            <h2>Spread Sheet Mapper</h2>
-          </header>
+        <FileContext.Provider value={{ onFileLoad, onFileSave }}>
+          <div className="App">
+            {showOverlay && <LoadingOverlay />}
 
-          <div className="App-body">
-            <div className="App-body-left">
-              <FileLoader
-                title="Load Columns From File"
-                onFileLoad={(event: ChangeEvent<HTMLInputElement>) => {
-                  onFileLoadHandler(event, "from");
-                }}
-              />
-              {headersFrom && headersFrom.length && (
-                <>
-                  <hr />
-                  <HeaderList
-                    title="Columns Mapping From:"
-                    headers={headersFrom}
-                    type="from"
-                  />
-                </>
-              )}
-            </div>
-
-            <div className="App-body-center">
-              <FileSaver title="New File To Save" />
-              <hr />
-              <MappingsList />
-            </div>
-
-            <div className="App-body-right">
-              <FileLoader
-                title="Load Columns To File"
-                onFileLoad={(event: ChangeEvent<HTMLInputElement>) => {
-                  onFileLoadHandler(event, "to");
-                }}
-              />
-              {headersTo && headersTo.length && (
-                <>
-                  <hr />
-                  <HeaderList
-                    title="Columns Mapping To:"
-                    headers={headersTo}
-                    type="to"
-                  />
-                </>
-              )}
-            </div>
+            <Header />
+            <Body />
+            <Footer />
           </div>
-
-          <div className="App-footer">
-            <p>
-              Author: Matt McCord [
-              <a href="mailto:mattm.eternal@gmail.com">
-                mattm.eternal@gmail.com]
-              </a>
-            </p>
-          </div>
-        </div>
+        </FileContext.Provider>
       </MappingsContext.Provider>
     </HeadersContext.Provider>
   );

@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 
-import "../styles/MappingsList.css";
+import "../styles/components/MappingsList.css";
 
 import { MappingItem } from "./MappingItem";
 import {

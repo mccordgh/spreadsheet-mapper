@@ -1,6 +1,6 @@
 import React from "react";
 
-import "../styles/HeaderList.css";
+import "../styles/components/HeaderList.css";
 
 import { ListItem } from "./ListItem";
 import { HeaderItem } from "../models/HeaderItem";

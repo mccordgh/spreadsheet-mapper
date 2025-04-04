@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 
-import "../styles/ListItem.css";
+import "../styles/components/ListItem.css";
 import { HeaderItem } from "../models/HeaderItem";
 import { HeadersContext } from "../context/HeadersContext";
 
